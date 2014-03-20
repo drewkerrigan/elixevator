@@ -85,4 +85,23 @@ mix test
 
 ![Diagram](https://raw.githubusercontent.com/drewkerrigan/elixevator/master/diagram.jpg "Diagram")
 
+# Usage
 
+```
+id = 1
+Elixevator.create(id)
+{:ok, status} = Elixevator.get_status(id) 
+# status = {1, 1, 1}
+
+Elixevator.pickup(id, 3, 1)
+{:ok, status} = Elixevator.get_status(id) 
+# status = {1, 1, 3}
+
+Elixevator.step(id)
+{:ok, status} = Elixevator.get_status(id) 
+# status = {1, 2, 3}
+
+Elixevator.step(id)
+{:ok, status} = Elixevator.get_status(id) 
+# status = {1, 3, 3}
+```
