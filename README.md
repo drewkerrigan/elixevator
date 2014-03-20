@@ -89,6 +89,8 @@ mix test
 
 # Usage
 
+Here is a simple example of an elevator receiving a pickup call for floor 3 while on floor 1
+
 ```
 id = 1
 Elixevator.create(id)
@@ -106,4 +108,54 @@ Elixevator.step(id)
 Elixevator.step(id)
 {:ok, status} = Elixevator.get_status(id) 
 # status = {1, 3, 3}
+```
+
+Here is a more complex example of a multi-pickup situation, notes inline
+
+```
+
+Elixevator.create(7)
+
+#initial state, floor 1, goal 1
+assert {:ok, {7, 1, 1}} == Elixevator.get_status(7)
+
+#pickup calls are made for floors 3, 2, 6, and 1 respectively
+:ok = Elixevator.pickup(7, 3, 1)
+:ok = Elixevator.pickup(7, 2, -1)
+:ok = Elixevator.pickup(7, 6, -1)
+:ok = Elixevator.pickup(7, 1, 1)
+
+#elevator first makes it's way to floor 3
+Elixevator.step(7)
+assert {:ok, {7, 2, 3}} == Elixevator.get_status(7)
+
+#once it gets there, the front of the queue (FIFO) is popped, and the new goal is 2
+Elixevator.step(7)
+assert {:ok, {7, 3, 2}} == Elixevator.get_status(7)
+
+#the person on the 2nd floor wanted to go down, but 6 needs to be picked up first because they requested a pickup
+#before the person on the 2nd floor was able to press any buttons. It would be possible to add additional logic to the
+#Finite State Machine in order to calculate shortest distances and more efficiently use the people's time by scanning
+#the future goals and picking the next goal based on distance rather than a simple FIFO, but that is for another day.
+Elixevator.step(7)
+assert {:ok, {7, 2, 6}} == Elixevator.get_status(7)
+
+Elixevator.step(7)
+assert {:ok, {7, 3, 6}} == Elixevator.get_status(7)
+
+Elixevator.step(7)
+assert {:ok, {7, 4, 6}} == Elixevator.get_status(7)
+
+Elixevator.step(7)
+assert {:ok, {7, 5, 6}} == Elixevator.get_status(7)
+
+Elixevator.step(7)
+assert {:ok, {7, 6, 1}} == Elixevator.get_status(7)
+
+Elixevator.step(7) # 5
+Elixevator.step(7) # 4
+Elixevator.step(7) # 3
+Elixevator.step(7) # 2
+Elixevator.step(7) # 1
+assert {:ok, {7, 1, 1}} == Elixevator.get_status(7)
 ```
