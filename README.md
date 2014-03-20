@@ -1,4 +1,3 @@
-elixevator
-==========
+# Elixevator
 
-State-based elevator controller in Elixir
+** TODO: Add description **
