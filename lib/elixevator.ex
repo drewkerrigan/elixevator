@@ -15,7 +15,7 @@ defmodule Elixevator do
   end
 
   def step(id) do
-    :gen_server.call(:elixevator_server, {:step, id})
+    :gen_server.cast(:elixevator_server, {:step, id})
   end
 
   def update(id, new_id, floor, goal) do

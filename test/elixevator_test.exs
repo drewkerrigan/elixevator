@@ -42,16 +42,21 @@ defmodule ElixevatorTest do
   end
 
   test "an elevator state changes after pickup" do
-    expected_state = {6, 2, 3}
-
     Elixevator.create(6)
 
-    Elixevator.pickup(6, 3, 1)
+    :ok = Elixevator.pickup(6, 3, 1)
 
     Elixevator.step(6)
 
-    {:ok, actual_state} = Elixevator.get_status(6)
+    assert {:ok, {6, 2, 3}} == Elixevator.get_status(6)
 
-    assert expected_state == actual_state
+    Elixevator.step(6)
+
+    assert {:ok, {6, 3, 3}} == Elixevator.get_status(6)
+
+    Elixevator.step(6)
+
+    assert {:ok, {6, 3, 3}} == Elixevator.get_status(6)
+
   end
 end
