@@ -85,6 +85,8 @@ mix test
 
 ![Diagram](https://raw.githubusercontent.com/drewkerrigan/elixevator/master/diagram.jpg "Diagram")
 
+
+
 # Usage
 
 ```

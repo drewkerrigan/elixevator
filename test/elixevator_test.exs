@@ -59,4 +59,43 @@ defmodule ElixevatorTest do
     assert {:ok, {6, 3, 3}} == Elixevator.get_status(6)
 
   end
+
+  test "an elevator state changes after multiple pickups" do
+    Elixevator.create(7)
+
+    assert {:ok, {7, 1, 1}} == Elixevator.get_status(7)
+
+    :ok = Elixevator.pickup(7, 3, 1)
+    :ok = Elixevator.pickup(7, 2, -1)
+    :ok = Elixevator.pickup(7, 6, -1)
+    :ok = Elixevator.pickup(7, 1, 1)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 2, 3}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 3, 2}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 2, 6}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 3, 6}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 4, 6}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 5, 6}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    assert {:ok, {7, 6, 1}} == Elixevator.get_status(7)
+
+    Elixevator.step(7)
+    Elixevator.step(7)
+    Elixevator.step(7)
+    Elixevator.step(7)
+    Elixevator.step(7)
+    assert {:ok, {7, 1, 1}} == Elixevator.get_status(7)
+  end
 end

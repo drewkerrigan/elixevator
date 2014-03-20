@@ -21,9 +21,15 @@ defmodule Elixevator.Elevator.Fsm do
 
   def ready(:step, state) do
     goal_floor = get_current_goal_floor(state.floor, state.goal)
-
     with_new_floor = state.floor(get_next_floor(state.floor, goal_floor))
-    with_new_goal = with_new_floor.goal(get_next_goal(state.floor, with_new_floor.goal))
+    current_floor = with_new_floor.floor
+
+    with_new_goal = cond do
+      goal_floor == current_floor ->
+        with_new_floor.goal(get_next_goal_floor(with_new_floor.floor, with_new_floor.goal))
+      true ->
+        with_new_floor
+    end
 
     { :next_state, :ready, with_new_goal }
   end
@@ -47,31 +53,26 @@ defmodule Elixevator.Elevator.Fsm do
   def get_next_floor(floor, goal) when goal < floor do
     floor - 1
   end
-
   def get_next_floor(floor, goal) when goal > floor do
     floor + 1
   end
-
   def get_next_floor(floor, floor) do
     floor
   end
 
-  def get_next_goal(floor, []) do
+  def get_next_goal_floor(floor, []) do
     [{floor,0}]
   end
-
-  def get_next_goal(_, [{g, d}]) do
+  def get_next_goal_floor(_, [{g, d}]) do
     [{g,d}]
   end
-
-  def get_next_goal(_, [_ | r]) do
+  def get_next_goal_floor(_, [_ | r]) do
     r
   end
 
   def get_current_goal_floor(_, [{goal_floor, _} | _]) do
     goal_floor
   end
-
   def get_current_goal_floor(floor, []) do
     floor
   end
