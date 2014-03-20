@@ -81,3 +81,8 @@ mix
 mix test
 ```
 
+# Implementation
+
+![Diagram](https://raw.githubusercontent.com/drewkerrigan/elixevator/master/diagram.jpg "Diagram")
+
+
